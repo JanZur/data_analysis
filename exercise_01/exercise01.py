@@ -6,7 +6,6 @@ marathon_data = np.loadtxt("ironman.txt")
 num_bins_total_time = 50
 num_bins_age = 8
 
-
 def plot_scatter(x_axis, y_axis, x_axis_name, y_axis_name, title, file_name):
     plt.scatter(x_axis, y_axis)
     plt.xlabel(x_axis_name)
@@ -14,7 +13,6 @@ def plot_scatter(x_axis, y_axis, x_axis_name, y_axis_name, title, file_name):
     plt.title(title)
     plt.savefig(file_name)
     plt.close()
-
 
 # total rank vs time
 plot_scatter(marathon_data[:, 2], marathon_data[:, 0], "total time in minutes ", "rank",
