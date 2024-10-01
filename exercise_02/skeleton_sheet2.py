@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from statistics import covariance
 
 def mean(x):
     """Calculate the mean for an array-like object x.
@@ -45,24 +45,32 @@ def variance(x):
 def mean_uncertainty(x):
     """Calculate the uncertainty in the mean for an array-like object x."""
     # here goes your code
-    uncertainty_mean = std(x)/np.sqrt(len(x))
+    uncertainty_mean = std(x)
     return uncertainty_mean
 
 def bin_values(data, n_bins):
-    bin_edges = np.linspace(data.min(), data.max(), n_bins+1)
+    bin_edges = np.linspace(data.min(), data.max(), n_bins)
     bin_number = np.digitize(data, bin_edges ) -1
     bin_count = np.bincount(bin_number)
 
     #calculate the error bars of each bin and store it in a array
     data_bin = np.column_stack((data, bin_number))
     error = np.zeros(bin_count.size)
+    bin_mean = np.zeros(bin_count.size)
     for i in range(n_bins):
         filtered_array = data_bin[data_bin[:,1] == i]
         error[i] = np.sqrt(len(filtered_array))
 
+    bin_edges_inclusive= np.linspace(data.min(), data.max(), n_bins+1)
+    bin_mean = [(bin_edges_inclusive[i] + bin_edges_inclusive[i+1]) / 2 for i in range(len(bin_edges_inclusive)-1)]
 
-    return bin_edges, bin_count, error
+    return bin_edges, bin_count, error,bin_mean
 
+
+def correlation(x, y):
+    cov = covariance(x, y)
+    cor = cov / (std(x) * std(y))
+    return cor
 
 def ex1():
     data = np.loadtxt("ironman.txt")
@@ -108,9 +116,9 @@ def ex1():
     #age distribution
     num_bins_age = 10
     width_age = (max(age)-min(age))/num_bins_age
-    bin_edges, number_of_people, error = bin_values(age, num_bins_age)
-    plt.bar(bin_edges, height = number_of_people, align='edge', width = width_age, yerr = error)
-    plt.xticks(bin_edges)
+    age_bin_edge, age_number_of_people, age_error, age_bin_mean = bin_values(age, num_bins_age)
+    plt.bar(age_bin_mean, height = age_number_of_people, align='center', width = width_age, yerr = age_error)
+    plt.xticks(age_bin_mean)
     plt.xlabel('age')
     plt.ylabel('number of people')
     plt.show()
@@ -119,26 +127,60 @@ def ex1():
     # time distribution
     num_bins_time = 10
     width_time = (max(total_time)-min(total_time))/num_bins_time
-    bin_edges, number_of_people, error = bin_values(total_time, num_bins_time)
-    plt.bar(bin_edges, height=number_of_people, align='edge', width=width_time, yerr=error)
-    plt.xticks(bin_edges)
+    time_bin_edges, time_number_of_people, time_error, time_bin_mean = bin_values(total_time, num_bins_time)
+    plt.bar(time_bin_mean, height=time_number_of_people, align='center', width=width_time, yerr=time_error)
+    plt.xticks(time_bin_mean)
     plt.xlabel('total time')
     plt.ylabel('number of people')
     plt.show()
     plt.close()
 
     #d
-    #mean_age_from_bins =
+    mean_age_from_bins = np.dot(age_bin_mean, age_number_of_people) / len(age)
+    # TODO calculate uncertainty
+    print(f'The mean age calculated from the bins is + {mean_age_from_bins:.0f} +/-  years')
 
+    mean_time_from_bins = np.dot(time_bin_mean, time_number_of_people) / len(age)
+    # TODO calculate uncertainty
+    print(f'The mean age calculated from the bins is + {mean_time_from_bins:.0f} +/-  minutes')
 
+    # TODO compare with different values for the number of bins, the more bins the more accurate the result should get
 
+    #e
+    #Calculate covariance and correlation coefficents
+    #total rank and total time
+    cov_rank_total_time = covariance(data[:, 0],data[:, 2])
+    cor_rank_total_time = correlation(data[:, 0],data[:, 2])
+    print(
+        f"The covariance of rank and total time is  {cov_rank_total_time:.0f}")
+    print(
+        f"The correlation of rank and total time is  {cor_rank_total_time:.0f}")
 
+    #age  versus total time
+    cov_age_total_time = covariance(age, data[:, 2])
+    cor_age_total_time = correlation(age, data[:, 2])
+    print(
+        f"The covariance of age and total time is  {cov_age_total_time:.0f}"
+    )
+    print(
+        f"The correlation of age and total time is  {cor_age_total_time:.0f}")
+    #total time and swimming time
+    #cycling time and running time
 
+    #
+
+def weighted_mean_uncertainties(x, uncertainty):
+    weights = 1 / np.power(uncertainty,2)
+    weighted_mean = np.average(x, weights=weights)
+    return weighted_mean
 
 def ex2():
     radiation = np.loadtxt("radiation.txt")
+    weighted_mean = weighted_mean_uncertainties(radiation[:,0], radiation[:,1])
+    print(weighted_mean)
+
 
 
 if __name__ == '__main__':
     ex1()
-    # ex2()  # uncomment to run ex2
+    ex2()  # uncomment to run ex2
