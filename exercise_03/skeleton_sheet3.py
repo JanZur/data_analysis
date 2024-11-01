@@ -71,7 +71,7 @@ def ex1():
             p_min_three))
         if (p_min_three >= 0.99):
             minimal_number_of_detectors = n
-    print("The minimal number of detectors therefore is: " + str(minimal_number_of_detectors))
+    print("The minimal number of detectors to reach 99% therefore is: " + str(minimal_number_of_detectors))
 
     print("c)")
     print(
@@ -150,7 +150,7 @@ def ex4():
     gaussian_approximation = scipy.stats.norm(mean_binomial, std_binomial)
     probability_more_than_390_gaussian = 1 - gaussian_approximation.cdf(390)
     print("The probability for more than 390 detections with the gaussian approximation is: " + str(
-        probability_more_than_390_gaussian))
+        probability_more_than_390_gaussian.round(2)))
 
     plt.bar(np.arange(0, 500), binomial_dist.pmf(np.arange(0, 500)), label="Binomial")
     plt.bar(np.arange(0, 500), gaussian_approximation.pdf(np.arange(0, 500)), label="Gaussian")
@@ -169,7 +169,7 @@ def ex4():
     poisson_dist = scipy.stats.poisson(mean_binomial)
     probability_more_than_390_poisson = 1 - poisson_dist.cdf(390)
     print("The probability for more than 390 detections with the poisson approximation is: " + str(
-        probability_more_than_390_poisson))
+        probability_more_than_390_poisson.round(2)))
     plt.bar(np.arange(0, 500), poisson_dist.pmf(np.arange(0, 500)), label="Poisson")
     plt.bar(np.arange(0, 500), binomial_dist.pmf(np.arange(0, 500)), label="Binomial")
     plt.legend()
@@ -203,10 +203,12 @@ def ex4():
     plt.savefig("poisson_approximation_binomial_comparison_neutrinos.png")
 
     print("The poisson approximation is better in theis case because the used probability is a lot smaller than in "
-          "the previous case. This can be seen in the plot poisson_approximation_binomial_comparison_neutrinos.png")
+          "the previous case. Therefore the ration between the number of evaluations and the probability is mush "
+          "higher, resulting in the better approximation. This can be "
+          "seen in the plot poisson_approximation_binomial_comparison_neutrinos.png")
 
 
 if __name__ == '__main__':
-    # ex1()
-    # ex3()  # uncomment to run ex3
+    ex1()
+    ex3()  # uncomment to run ex3
     ex4()  # uncomment to run ex4
