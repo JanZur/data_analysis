@@ -15,10 +15,9 @@ plt.plot(sand_data[:, 0], sand_data[:, 1], 'o')
 plt.errorbar(sand_data[:, 0], sand_data[:, 1], yerr=sand_data[:, 2], fmt='o')
 plt.xlabel('Granularity (mm)')
 plt.ylabel('Slope (degrees)')
-plt.xlim(0, 2)
-plt.ylim(0, 25)
+plt.xlim(0, 1.7)
+plt.ylim(0, 20)
 plt.savefig('sand_slope.png')
-plt.show()
 
 
 def get_slope_ignore_covariance(granularity, m, q, granularity_unc, offset_unc):
