@@ -55,7 +55,7 @@ std_volleyball = np.std(volleyball_heights, ddof=1)
 std_football = np.std(football_heights, ddof=1)
 
 t_score, p_value_t_test = stats.ttest_ind(volleyball_heights, football_heights, equal_var=False)
-print(f'It is a two taylored problem and if we perform the t-test given the std are unknown the p-value is:'
+print(f'It is a two tailed problem and if we perform the t-test given the std are unknown the p-value is:'
       f' {p_value_t_test:.4f}')
 
 known_std = 5
