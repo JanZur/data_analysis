@@ -99,8 +99,8 @@ def ex_1d(measurements, uncertainties):
     """Run exercise 1d."""
     optimal_analytical_resistance = optimal_resistance_analytical(measurements, uncertainties)
     print(f"The optimal analytical calculated resistance is {optimal_analytical_resistance:.2f} Ohm.")
-    print("The values is not the same as the one optained from the plotting method, this is due to the facct that the "
-          "plotting assumes a linear relation without a bias. and therefore is off by some small amount because the "
+    print("The values are not the same as the one optained from the plotting method, this is due to the fact that the "
+          "plotting assumes a linear relation without a bias and therefore is off by some small amount because the "
           "measurement has a small bias.")
 
 
@@ -264,10 +264,16 @@ def ex_2g(measurements):
     # NOTE: curve_fit already calculates the chi2 value (including error) for us!
     # hint: maybe look for simple examples around or play around if it is not clear on how to use curve_fit.
 
-    popt, pcov = opt.curve_fit(current_ohmslaw_bias, measurements[:, 0], measurements[:, 1], sigma=measurements[:, 2])
-    print("The optimal resistance is: ", popt[0])
-    print("The offset is : ", popt[1])
-    print("The uncertainty on the resistance is: ", np.sqrt(pcov[0,0]))
+    fit_params, fit_covariance_matrix = opt.curve_fit(current_ohmslaw_bias,measurements[:, 0], measurements[:, 1],
+                                                      sigma=measurements[:, 2])
+
+    print("The optimal resistance is: ", fit_params[0])
+    print("The offset is : ", fit_params[1])
+    print("The uncertainty on the resistance is: ", np.sqrt(fit_covariance_matrix[0,0]))
+    print("h)")
+    print("The uncertainty on the offset is: ", np.sqrt(fit_covariance_matrix[1,1]))
+    print("Therefore we get a value that lies in between the two values we got before in exercise e.")
+
 
 
 
@@ -307,5 +313,5 @@ if __name__ == '__main__':
     ex_2f(measurements)
     print("g) TODO")
     ex_2g(measurements)
-    print("h) TODO")
+
 
