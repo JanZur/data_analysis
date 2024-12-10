@@ -311,7 +311,7 @@ if __name__ == '__main__':
     ex_2e(measurements)
     print("f)")
     ex_2f(measurements)
-    print("g) TODO")
+    print("g)")
     ex_2g(measurements)
 
 
